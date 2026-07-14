@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-ocean">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TypeWise - Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- SIDEBAR NAV -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">TW</div>
+        <span class="logo-text">TypeWise</span>
+      </div>
+      <ul class="nav-links">
+        <li class="nav-item active"><a href="dashboard.html"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a></li>
+        <li class="nav-item"><a href="lessons.html"><i data-lucide="book-open"></i> <span>Lessons</span></a></li>
+        <li class="nav-item"><a href="tests.html"><i data-lucide="timer"></i> <span>Tests</span></a></li>
+        <li class="nav-item"><a href="games.html"><i data-lucide="gamepad-2"></i> <span>Games</span></a></li>
+        <li class="nav-item"><a href="themes.html"><i data-lucide="palette"></i> <span>Themes</span></a></li>
+        <li class="nav-item"><a href="progress.html"><i data-lucide="trending-up"></i> <span>Progress</span></a></li>
+        <li class="nav-item"><a href="profile.html"><i data-lucide="user"></i> <span>Profile</span></a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary" onclick="location.href='profile.html'">
+          <div class="user-avatar-placeholder" id="nav-avatar">U</div>
+          <div class="user-name-role">
+            <span class="username-label" id="nav-username">Loading...</span>
+            <span class="xp-label" id="nav-xp">0 XP</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN BODY -->
+    <main class="main-content">
+      <!-- HEADER -->
+      <header class="top-header">
+        <div class="header-title">
+          <h1 id="welcome-message">Hello, User!</h1>
+          <p>Let's learn something new today.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-outline" onclick="API.logout()"><i data-lucide="log-out"></i> Logout</button>
+        </div>
+      </header>
+
+      <!-- ROW 1: MASCOT & DAILY GOAL -->
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; flex-wrap: wrap;" id="dashboard-row-1">
+        <!-- Growth Widget -->
+        <div class="card mascot-card">
+          <div class="mascot-container" id="mascot-svg-wrapper">
+            <!-- Dynamic SVG injected here -->
+          </div>
+          <div class="mascot-info">
+            <span class="mascot-stage-badge" id="mascot-stage">Seedling</span>
+            <div class="mascot-level" id="mascot-level">Level 1</div>
+            <p style="font-size: 14px; opacity: 0.95;">Keep typing to grow your mascot from seedling to a forest giant!</p>
+            <div class="xp-progress-bar-bg">
+              <div class="xp-progress-bar-fill" id="mascot-xp-fill"></div>
+            </div>
+            <span class="xp-text" id="mascot-xp-label">0 / 50 XP</span>
+          </div>
+        </div>
+
+        <!-- Daily Goal Widget -->
+        <div class="card" style="display: flex; align-items: center; justify-content: space-around; padding: 20px;">
+          <div class="goal-ring-container">
+            <h3 style="font-size: 15px; color: var(--text-muted); margin-bottom: 12px; font-weight: 600;">Daily Goal</h3>
+            <div class="circular-progress">
+              <svg>
+                <circle class="circle-bg" cx="60" cy="60" r="50"></circle>
+                <circle class="circle-fill" id="goal-circle" cx="60" cy="60" r="50"></circle>
+              </svg>
+              <div class="goal-ring-text">
+                <span class="goal-ring-value" id="goal-minutes">0</span>
+                <span class="goal-ring-unit" id="goal-target">/ 10m</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 2: STAT PILLS -->
+      <section class="stats-grid">
+        <div class="stat-pill">
+          <div class="stat-icon"><i data-lucide="gauge"></i></div>
+          <div class="stat-details">
+            <span class="stat-value" id="stat-wpm">0</span>
+            <span class="stat-label">Avg Speed (WPM)</span>
+          </div>
+        </div>
+
+        <div class="stat-pill">
+          <div class="stat-icon"><i data-lucide="target"></i></div>
+          <div class="stat-details">
+            <span class="stat-value" id="stat-accuracy">0%</span>
+            <span class="stat-label">Avg Accuracy</span>
+          </div>
+        </div>
+
+        <div class="stat-pill">
+          <div class="stat-icon"><i data-lucide="clock"></i></div>
+          <div class="stat-details">
+            <span class="stat-value" id="stat-time">0m</span>
+            <span class="stat-label">Typing Time</span>
+          </div>
+        </div>
+
+        <div class="stat-pill">
+          <div class="stat-icon"><i data-lucide="award"></i></div>
+          <div class="stat-details">
+            <span class="stat-value" id="stat-goal-pct">0%</span>
+            <span class="stat-label">Daily Goal Met</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ROW 3: TILES & CONTINUANCE -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; flex-wrap: wrap;">
+        <!-- Continue lesson -->
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div class="card-title">Continue Typing Practice</div>
+            <h3 style="font-size: 22px; margin-bottom: 8px;" id="continue-lesson-title">Loading Lesson...</h3>
+            <p style="color: var(--text-muted); font-size: 14px;" id="continue-lesson-desc">Click start to pick up right where you left off.</p>
+          </div>
+          <div style="margin-top: 24px;">
+            <button class="btn btn-accent" id="btn-continue-lesson">
+              Start Practice <i data-lucide="play"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Launch Tiles -->
+        <div class="card">
+          <div class="card-title">Quick Actions</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <button class="btn btn-outline" style="flex-direction: column; gap: 8px; padding: 20px 10px; height: 110px;" onclick="location.href='lessons.html'">
+              <i data-lucide="book-open" style="width: 28px; height: 28px; color: var(--primary);"></i>
+              Lessons
+            </button>
+            <button class="btn btn-outline" style="flex-direction: column; gap: 8px; padding: 20px 10px; height: 110px;" onclick="location.href='tests.html'">
+              <i data-lucide="timer" style="width: 28px; height: 28px; color: var(--primary);"></i>
+              Timed Test
+            </button>
+            <button class="btn btn-outline" style="flex-direction: column; gap: 8px; padding: 20px 10px; height: 110px;" onclick="location.href='games.html'">
+              <i data-lucide="gamepad-2" style="width: 28px; height: 28px; color: var(--primary);"></i>
+              Play Games
+            </button>
+            <button class="btn btn-outline" style="flex-direction: column; gap: 8px; padding: 20px 10px; height: 110px;" onclick="location.href='progress.html'">
+              <i data-lucide="trending-up" style="width: 28px; height: 28px; color: var(--primary);"></i>
+              Progress Charts
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 4: RECENT ACHIEVEMENTS -->
+      <div class="card">
+        <div class="card-title">Recently Unlocked Achievements</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;" id="achievements-strip">
+          <p style="color: var(--text-muted); font-size: 14px;" id="no-achievements-label">No achievements unlocked yet. Keep practicing!</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Lucide Script -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/api.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

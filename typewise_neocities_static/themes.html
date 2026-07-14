@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-ocean">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TypeWise - Themes Manager</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .theme-card-option {
+      background-color: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 200px;
+      box-shadow: var(--shadow);
+      transition: all 0.2s;
+    }
+    .theme-card-option:hover {
+      transform: translateY(-2px);
+    }
+    .theme-card-option.active {
+      border-color: var(--primary);
+      box-shadow: 0 4px 16px -2px rgba(47, 168, 224, 0.2);
+    }
+    .color-swatch-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .color-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- SIDEBAR NAV -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">TW</div>
+        <span class="logo-text">TypeWise</span>
+      </div>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="dashboard.html"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a></li>
+        <li class="nav-item"><a href="lessons.html"><i data-lucide="book-open"></i> <span>Lessons</span></a></li>
+        <li class="nav-item"><a href="tests.html"><i data-lucide="timer"></i> <span>Tests</span></a></li>
+        <li class="nav-item"><a href="games.html"><i data-lucide="gamepad-2"></i> <span>Games</span></a></li>
+        <li class="nav-item active"><a href="themes.html"><i data-lucide="palette"></i> <span>Themes</span></a></li>
+        <li class="nav-item"><a href="progress.html"><i data-lucide="trending-up"></i> <span>Progress</span></a></li>
+        <li class="nav-item"><a href="profile.html"><i data-lucide="user"></i> <span>Profile</span></a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary" onclick="location.href='profile.html'">
+          <div class="user-avatar-placeholder" id="nav-avatar">U</div>
+          <div class="user-name-role">
+            <span class="username-label" id="nav-username">Loading...</span>
+            <span class="xp-label" id="nav-xp">0 XP</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN BODY -->
+    <main class="main-content">
+      <header class="top-header">
+        <div class="header-title">
+          <h1>Visual Themes</h1>
+          <p>Personalize your typing interface. Every style preset is free and unlocked.</p>
+        </div>
+      </header>
+
+      <section class="themes-grid" id="themes-container">
+        <!-- Ocean Blue -->
+        <div class="theme-card-option" id="card-theme-ocean" onclick="selectTheme('ocean')">
+          <div>
+            <h3 style="font-size: 20px;">Ocean Blue</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Bright sky-blue headers with clean soft grey panels.</p>
+            <div class="color-swatch-row">
+              <div class="color-circle" style="background-color: #2FA8E0;"></div>
+              <div class="color-circle" style="background-color: #ffffff;"></div>
+              <div class="color-circle" style="background-color: #f5f8fa;"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; margin-top: 16px;">Apply Theme</button>
+        </div>
+
+        <!-- Forest Green -->
+        <div class="theme-card-option" id="card-theme-forest" onclick="selectTheme('forest')">
+          <div>
+            <h3 style="font-size: 20px;">Forest Green</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Warm emerald accents combined with organic shades.</p>
+            <div class="color-swatch-row">
+              <div class="color-circle" style="background-color: #10b981;"></div>
+              <div class="color-circle" style="background-color: #ffffff;"></div>
+              <div class="color-circle" style="background-color: #f4f7f5;"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; margin-top: 16px;">Apply Theme</button>
+        </div>
+
+        <!-- Sunset Orange -->
+        <div class="theme-card-option" id="card-theme-sunset" onclick="selectTheme('sunset')">
+          <div>
+            <h3 style="font-size: 20px;">Sunset Orange</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Glowing orange elements with light terracotta cards.</p>
+            <div class="color-swatch-row">
+              <div class="color-circle" style="background-color: #f97316;"></div>
+              <div class="color-circle" style="background-color: #ffffff;"></div>
+              <div class="color-circle" style="background-color: #fffaf7;"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; margin-top: 16px;">Apply Theme</button>
+        </div>
+
+        <!-- Midnight Dark -->
+        <div class="theme-card-option" id="card-theme-midnight" onclick="selectTheme('midnight')">
+          <div>
+            <h3 style="font-size: 20px;">Midnight Dark</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Deep space navy cards optimized for low-light practice.</p>
+            <div class="color-swatch-row">
+              <div class="color-circle" style="background-color: #3b82f6;"></div>
+              <div class="color-circle" style="background-color: #151f32;"></div>
+              <div class="color-circle" style="background-color: #0b0f19;"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; margin-top: 16px;">Apply Theme</button>
+        </div>
+
+        <!-- Minimal White -->
+        <div class="theme-card-option" id="card-theme-minimal" onclick="selectTheme('minimal')">
+          <div>
+            <h3 style="font-size: 20px;">Minimal White</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Sleek monochrome outline design without heavy shadows.</p>
+            <div class="color-swatch-row">
+              <div class="color-circle" style="background-color: #18181b;"></div>
+              <div class="color-circle" style="background-color: #fcfcfc;"></div>
+              <div class="color-circle" style="background-color: #ffffff;"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; margin-top: 16px;">Apply Theme</button>
+        </div>
+
+        <!-- High-Contrast Accessibility -->
+        <div class="theme-card-option" id="card-theme-contrast" onclick="selectTheme('contrast')">
+          <div>
+            <h3 style="font-size: 20px;">High-Contrast</h3>
+            <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">Pure black backgrounds with thick high-visibility borders.</p>
+            <div class="color-swatch-row">
+              <div class="color-circle" style="background-color: #ffff00;"></div>
+              <div class="color-circle" style="background-color: #121212;"></div>
+              <div class="color-circle" style="background-color: #000000;"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; margin-top: 16px;">Apply Theme</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Lucide Script -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/api.js"></script>
+  <script src="js/themes.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadUserData();
+      highlightActiveCard();
+    });
+
+    async function loadUserData() {
+      if (window.API) {
+        try {
+          const user = await API.getCurrentUser();
+          document.getElementById('nav-username').textContent = user.name;
+          document.getElementById('nav-xp').textContent = `${user.xp} XP`;
+          document.getElementById('nav-avatar').textContent = user.name.charAt(0).toUpperCase();
+        } catch (e) {
+          // ignore
+        }
+      }
+    }
+
+    function highlightActiveCard() {
+      // Clear previous active states
+      const cards = document.querySelectorAll('.theme-card-option');
+      cards.forEach(c => c.classList.remove('active'));
+
+      const activeTheme = localStorage.getItem('typewise_theme') || 'ocean';
+      const activeCard = document.getElementById(`card-theme-${activeTheme}`);
+      if (activeCard) {
+        activeCard.classList.add('active');
+      }
+    }
+
+    async function selectTheme(themeName) {
+      // 1. Apply theme locally immediately
+      applyTheme(themeName);
+      highlightActiveCard();
+
+      // 2. Sync to server profile
+      if (window.API) {
+        try {
+          await API.updateUserProfile({ theme_pref: themeName });
+          API.showToast('Theme Updated', `Switched visual skin to ${themeName}.`, 'success');
+        } catch (e) {
+          console.error('Failed to sync theme preference:', e);
+        }
+      }
+    }
+  </script>
+</body>
+</html>

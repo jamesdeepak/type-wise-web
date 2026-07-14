@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-ocean">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TypeWise - Lessons & Practice</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Styling specific to active lessons */
+    .catalog-view {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .workspace-view {
+      display: none;
+      flex-direction: column;
+      gap: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- SIDEBAR NAV -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">TW</div>
+        <span class="logo-text">TypeWise</span>
+      </div>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="dashboard.html"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a></li>
+        <li class="nav-item active"><a href="lessons.html"><i data-lucide="book-open"></i> <span>Lessons</span></a></li>
+        <li class="nav-item"><a href="tests.html"><i data-lucide="timer"></i> <span>Tests</span></a></li>
+        <li class="nav-item"><a href="games.html"><i data-lucide="gamepad-2"></i> <span>Games</span></a></li>
+        <li class="nav-item"><a href="themes.html"><i data-lucide="palette"></i> <span>Themes</span></a></li>
+        <li class="nav-item"><a href="progress.html"><i data-lucide="trending-up"></i> <span>Progress</span></a></li>
+        <li class="nav-item"><a href="profile.html"><i data-lucide="user"></i> <span>Profile</span></a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary" onclick="location.href='profile.html'">
+          <div class="user-avatar-placeholder" id="nav-avatar">U</div>
+          <div class="user-name-role">
+            <span class="username-label" id="nav-username">Loading...</span>
+            <span class="xp-label" id="nav-xp">0 XP</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN BODY -->
+    <main class="main-content">
+      
+      <!-- CATALOG VIEW -->
+      <div class="catalog-view" id="catalog-section">
+        <header class="top-header">
+          <div class="header-title">
+            <h1>Typing Lessons</h1>
+            <p>Freely jump into any course, level, or topic. No locked content.</p>
+          </div>
+          <button class="btn btn-outline" onclick="openCustomPracticeDialog()"><i data-lucide="plus"></i> Custom Practice</button>
+        </header>
+
+        <!-- Search & Filter Bar -->
+        <div class="card" style="padding: 16px;">
+          <div style="display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <div class="lesson-categories" style="margin-bottom: 0;">
+              <button class="lesson-category-btn active" onclick="filterCatalog('all', this)">All Lessons</button>
+              <button class="lesson-category-btn" onclick="filterCatalog('keys', this)">Learn the Keys</button>
+              <button class="lesson-category-btn" onclick="filterCatalog('speed', this)">Speed Building</button>
+              <button class="lesson-category-btn" onclick="filterCatalog('real-world', this)">Real-World Facts</button>
+              <button class="lesson-category-btn" onclick="filterCatalog('coding', this)">Coding drills</button>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <select id="select-difficulty-filter" class="lesson-category-btn" style="padding-right: 28px;" onchange="handleDiffFilter()">
+                <option value="all">Any Difficulty</option>
+                <option value="easy">Easy Facts</option>
+                <option value="medium">Medium Facts</option>
+                <option value="hard">Hard Facts</option>
+              </select>
+              <button class="btn btn-accent" style="padding: 8px 16px; font-size: 13px;" onclick="loadSurpriseMe()">Surprise Me <i data-lucide="shuffle"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lessons Cards Grid -->
+        <section class="lessons-grid" id="lessons-grid-container">
+          <!-- Injected dynamically -->
+        </section>
+      </div>
+
+      <!-- ACTIVE TYPING WORKSPACE -->
+      <div class="workspace-view" id="workspace-section">
+        <header class="top-header" style="border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 8px;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <button class="btn btn-outline" style="padding: 8px 16px;" onclick="exitWorkspace()"><i data-lucide="chevron-left"></i> Catalog</button>
+            <h2 id="workspace-title" style="font-size: 22px;">Lesson Title</h2>
+          </div>
+          <!-- Live metrics -->
+          <div style="display: flex; gap: 24px; align-items: center;">
+            <div style="text-align: right;">
+              <span style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Speed</span>
+              <div id="live-wpm" style="font-size: 24px; font-weight: 700; font-family: 'Outfit'; color: var(--primary);">0 WPM</div>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Accuracy</span>
+              <div id="live-accuracy" style="font-size: 24px; font-weight: 700; font-family: 'Outfit'; color: var(--success);">100%</div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Controls toolbar -->
+        <div class="card" style="padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-size: 13px; color: var(--text-muted);" id="workspace-instructions">
+            Press any key to begin typing. Use standard touch finger alignments.
+          </div>
+          <div class="typing-controls">
+            <button class="typing-control-btn" onclick="toggleSound(this)" id="btn-sound"><i data-lucide="volume-2"></i> Sound On</button>
+            <button class="typing-control-btn" onclick="toggleReadAloud(this)" id="btn-read-aloud"><i data-lucide="audio-lines"></i> Read Aloud Off</button>
+            <button class="typing-control-btn" onclick="restartLesson()"><i data-lucide="refresh-cw"></i> Redo</button>
+          </div>
+        </div>
+
+        <!-- Character display card -->
+        <div class="card" style="padding: 0;">
+          <div class="typing-text-area" id="typing-box" tabindex="0">
+            <!-- Typing letters injected here -->
+          </div>
+        </div>
+
+        <!-- Visual Keyboard Section -->
+        <div class="card keyboard-section" id="overlay-section">
+          <!-- Hand highlights -->
+          <div class="hand-overlay-container">
+            <!-- Left Hand -->
+            <svg class="hand-svg" viewBox="0 0 100 100" id="left-hand-svg">
+              <path d="M10,80 C10,50 15,35 22,30 C22,25 25,25 27,32 C29,20 33,20 35,28 C37,15 41,15 43,26 C45,22 49,22 50,30 C51,35 52,65 52,80 Z" />
+              <!-- Finger tips labels circles -->
+              <circle cx="23" cy="27" r="4" class="finger-dot" id="dot-left-pinky" fill="none" />
+              <circle cx="31" cy="21" r="4" class="finger-dot" id="dot-left-ring" fill="none" />
+              <circle cx="39" cy="17" r="4" class="finger-dot" id="dot-left-middle" fill="none" />
+              <circle cx="47" cy="23" r="4" class="finger-dot" id="dot-left-index" fill="none" />
+              <circle cx="58" cy="45" r="4" class="finger-dot" id="dot-left-thumb" fill="none" />
+            </svg>
+            
+            <!-- Right Hand -->
+            <svg class="hand-svg" viewBox="0 0 100 100" id="right-hand-svg">
+              <path d="M90,80 C90,50 85,35 78,30 C78,25 75,25 73,32 C71,20 67,20 65,28 C63,15 59,15 57,26 C55,22 51,22 50,30 C49,35 48,65 48,80 Z" />
+              <circle cx="77" cy="27" r="4" class="finger-dot" id="dot-right-pinky" fill="none" />
+              <circle cx="69" cy="21" r="4" class="finger-dot" id="dot-right-ring" fill="none" />
+              <circle cx="61" cy="17" r="4" class="finger-dot" id="dot-right-middle" fill="none" />
+              <circle cx="53" cy="23" r="4" class="finger-dot" id="dot-right-index" fill="none" />
+              <circle cx="42" cy="45" r="4" class="finger-dot" id="dot-right-thumb" fill="none" />
+            </svg>
+          </div>
+
+          <!-- On Screen Keyboard -->
+          <div class="keyboard-container" id="visual-keyboard">
+            <!-- Row 1 -->
+            <div class="keyboard-row">
+              <div class="key" id="key-````` font-size-small">~</div>
+              <div class="key" id="key-1">1</div>
+              <div class="key" id="key-2">2</div>
+              <div class="key" id="key-3">3</div>
+              <div class="key" id="key-4">4</div>
+              <div class="key" id="key-5">5</div>
+              <div class="key" id="key-6">6</div>
+              <div class="key" id="key-7">7</div>
+              <div class="key" id="key-8">8</div>
+              <div class="key" id="key-9">9</div>
+              <div class="key" id="key-0">0</div>
+              <div class="key" id="key--">-</div>
+              <div class="key" id="key-=">=</div>
+              <div class="key key-wide-20" id="key-backspace">←</div>
+            </div>
+            <!-- Row 2 -->
+            <div class="keyboard-row">
+              <div class="key key-wide-15" id="key-tab">Tab</div>
+              <div class="key" id="key-q">Q</div>
+              <div class="key" id="key-w">W</div>
+              <div class="key" id="key-e">E</div>
+              <div class="key" id="key-r">R</div>
+              <div class="key" id="key-t">T</div>
+              <div class="key" id="key-y">Y</div>
+              <div class="key" id="key-u">U</div>
+              <div class="key" id="key-i">I</div>
+              <div class="key" id="key-o">O</div>
+              <div class="key" id="key-p">P</div>
+              <div class="key" id="key-[">[</div>
+              <div class="key" id="key-]">]</div>
+              <div class="key key-wide-15" id="key-\">\</div>
+            </div>
+            <!-- Row 3 -->
+            <div class="keyboard-row">
+              <div class="key key-wide-20" id="key-capslock">Caps</div>
+              <div class="key" id="key-a">A</div>
+              <div class="key" id="key-s">S</div>
+              <div class="key" id="key-d">D</div>
+              <div class="key" id="key-f">F</div>
+              <div class="key" id="key-g">G</div>
+              <div class="key" id="key-h">H</div>
+              <div class="key" id="key-j">J</div>
+              <div class="key" id="key-k">K</div>
+              <div class="key" id="key-l">L</div>
+              <div class="key" id="key-;">;</div>
+              <div class="key" id="key-`'">`</div>
+              <div class="key key-wide-20" id="key-enter">Enter</div>
+            </div>
+            <!-- Row 4 -->
+            <div class="keyboard-row">
+              <div class="key key-wide-25" id="key-shift-left">Shift</div>
+              <div class="key" id="key-z">Z</div>
+              <div class="key" id="key-x">X</div>
+              <div class="key" id="key-c">C</div>
+              <div class="key" id="key-v">V</div>
+              <div class="key" id="key-b">B</div>
+              <div class="key" id="key-n">N</div>
+              <div class="key" id="key-m">M</div>
+              <div class="key" id="key-,">,</div>
+              <div class="key" id="key-.">.</div>
+              <div class="key" id="key-/">/</div>
+              <div class="key key-wide-25" id="key-shift-right">Shift</div>
+            </div>
+            <!-- Row 5 -->
+            <div class="keyboard-row">
+              <div class="key key-space" id="key- ">Space</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- DID YOU KNOW RECAP MODAL -->
+  <div class="recap-modal" id="recap-modal-element">
+    <div class="recap-card">
+      <div class="recap-badge">Knowledge Unlocked</div>
+      <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 12px;">Did You Know?</h3>
+      <p class="recap-fact" id="recap-fact-text">Water exists naturally in three states: solid, liquid, and gas.</p>
+      
+      <div class="recap-stats">
+        <div style="background-color: var(--bg-app); padding: 12px; border-radius: 12px;">
+          <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Final Speed</span>
+          <h4 style="font-size: 24px; font-family: 'Outfit';" id="recap-wpm">42 WPM</h4>
+        </div>
+        <div style="background-color: var(--bg-app); padding: 12px; border-radius: 12px;">
+          <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Accuracy</span>
+          <h4 style="font-size: 24px; font-family: 'Outfit';" id="recap-accuracy">98%</h4>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button class="btn btn-outline" onclick="restartLesson()">Repeat Lesson</button>
+        <button class="btn btn-primary" onclick="exitWorkspace()">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUSTOM PRACTICE POPUP MODAL -->
+  <div class="recap-modal" id="custom-practice-modal">
+    <div class="recap-card" style="text-align: left; max-width: 550px;">
+      <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 8px;">Custom Practice</h3>
+      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">Paste your own study notes, code blocks, or phrases to practice typing them.</p>
+      
+      <textarea id="custom-text-input" style="width: 100%; height: 160px; padding: 12px; border-radius: 10px; border: 1px solid var(--border); font-family: inherit; font-size: 15px; outline: none; margin-bottom: 20px; background-color: var(--bg-app); color: var(--text-main);" placeholder="Enter text here..."></textarea>
+      
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button class="btn btn-outline" onclick="closeCustomPracticeDialog()">Cancel</button>
+        <button class="btn btn-primary" onclick="startCustomPractice()">Start Custom Practice</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lucide Script -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/api.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/typing.js"></script>
+  <script src="js/lessons.js"></script>
+</body>
+</html>

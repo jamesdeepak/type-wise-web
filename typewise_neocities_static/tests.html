@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-ocean">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TypeWise - Timed Typing Tests</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .setup-view {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .active-test-view {
+      display: none;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .results-view {
+      display: none;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .metric-box {
+      background-color: var(--bg-app);
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      flex: 1;
+    }
+    .metric-value {
+      font-size: 32px;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      color: var(--primary);
+    }
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- SIDEBAR NAV -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">TW</div>
+        <span class="logo-text">TypeWise</span>
+      </div>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="dashboard.html"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a></li>
+        <li class="nav-item"><a href="lessons.html"><i data-lucide="book-open"></i> <span>Lessons</span></a></li>
+        <li class="nav-item active"><a href="tests.html"><i data-lucide="timer"></i> <span>Tests</span></a></li>
+        <li class="nav-item"><a href="games.html"><i data-lucide="gamepad-2"></i> <span>Games</span></a></li>
+        <li class="nav-item"><a href="themes.html"><i data-lucide="palette"></i> <span>Themes</span></a></li>
+        <li class="nav-item"><a href="progress.html"><i data-lucide="trending-up"></i> <span>Progress</span></a></li>
+        <li class="nav-item"><a href="profile.html"><i data-lucide="user"></i> <span>Profile</span></a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary" onclick="location.href='profile.html'">
+          <div class="user-avatar-placeholder" id="nav-avatar">U</div>
+          <div class="user-name-role">
+            <span class="username-label" id="nav-username">Loading...</span>
+            <span class="xp-label" id="nav-xp">0 XP</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN BODY -->
+    <main class="main-content">
+      
+      <!-- SETUP VIEW -->
+      <div class="setup-view" id="setup-section">
+        <header class="top-header">
+          <div class="header-title">
+            <h1>Timed Typing Tests</h1>
+            <p>Assess your word-per-minute speed and accuracy with random knowledge passages.</p>
+          </div>
+        </header>
+
+        <!-- Test options selection -->
+        <div class="card">
+          <div class="card-title">Select Duration</div>
+          <div class="test-config-container">
+            <button class="test-time-btn active" onclick="selectDuration(60, this)">
+              <i data-lucide="clock" style="width: 24px; height: 24px; color: var(--primary);"></i>
+              1:00 Minute
+            </button>
+            <button class="test-time-btn" onclick="selectDuration(180, this)">
+              <i data-lucide="alarm-clock" style="width: 24px; height: 24px; color: var(--primary);"></i>
+              3:00 Minutes
+            </button>
+            <button class="test-time-btn" onclick="selectDuration(300, this)">
+              <i data-lucide="hourglass" style="width: 24px; height: 24px; color: var(--primary);"></i>
+              5:00 Minutes
+            </button>
+            <button class="test-time-btn" onclick="selectCustomDuration(this)">
+              <i data-lucide="sliders" style="width: 24px; height: 24px; color: var(--primary);"></i>
+              Custom Time
+            </button>
+          </div>
+
+          <!-- Custom duration slider -->
+          <div id="custom-duration-wrapper" style="display: none; padding: 16px; background-color: var(--bg-app); border-radius: 12px; margin-bottom: 24px; align-items: center; justify-content: space-between;">
+            <div style="font-weight: 600;">Custom duration: <span id="custom-minutes-label">2</span> minutes</div>
+            <input type="range" id="slider-duration" min="30" max="600" step="30" value="120" style="width: 60%; cursor: pointer;" oninput="updateCustomDurationLabel(this.value)">
+          </div>
+
+          <!-- Difficulty selection -->
+          <div style="margin-bottom: 24px;">
+            <label style="font-weight: 600; display: block; margin-bottom: 8px;">Fact Topic Preference (Optional)</label>
+            <select id="select-test-topic" class="form-control" style="width: 100%; max-width: 320px; background-color: var(--bg-app);">
+              <option value="all">Surprise Me (Any Category)</option>
+              <option value="science">Science & Space</option>
+              <option value="history">History & Chronicles</option>
+              <option value="geography">Geography & Landmarks</option>
+              <option value="general">General Knowledge</option>
+              <option value="language">Language & Words</option>
+            </select>
+          </div>
+
+          <button class="btn btn-accent" style="padding: 14px 28px;" onclick="startTest()"><i data-lucide="play"></i> Begin Speed Test</button>
+        </div>
+      </div>
+
+      <!-- ACTIVE TYPING TEST VIEW -->
+      <div class="active-test-view" id="active-test-section">
+        <header class="top-header" style="border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <button class="btn btn-outline" style="padding: 8px 16px;" onclick="abortTest()"><i data-lucide="chevron-left"></i> Cancel</button>
+            <h2 style="font-size: 22px;">Active Typing Test</h2>
+          </div>
+          <!-- Clock Timer -->
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="font-size: 14px; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Timer</div>
+            <div id="test-timer" style="font-size: 28px; font-weight: 800; font-family: 'Outfit'; color: var(--error);">01:00</div>
+          </div>
+        </header>
+
+        <!-- Live feedback -->
+        <div class="card" style="padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-size: 13px; color: var(--text-muted);">
+            Test running. Keep typing. The timer starts when you press the first key.
+          </div>
+          <div style="display: flex; gap: 24px;">
+            <div>WPM: <strong id="live-test-wpm">0</strong></div>
+            <div>Accuracy: <strong id="live-test-accuracy">100%</strong></div>
+          </div>
+        </div>
+
+        <div class="card" style="padding: 0;">
+          <div class="typing-text-area" id="test-typing-box" tabindex="0">
+            <!-- Typing content -->
+          </div>
+        </div>
+      </div>
+
+      <!-- TEST RESULTS VIEW -->
+      <div class="results-view" id="results-section">
+        <header class="top-header">
+          <div class="header-title">
+            <h1>Test Summary</h1>
+            <p>Here is how you performed in your typing evaluation.</p>
+          </div>
+          <button class="btn btn-outline" onclick="exitResults()"><i data-lucide="arrow-right"></i> Done</button>
+        </header>
+
+        <!-- Metrics Cards -->
+        <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+          <!-- Speed WPM -->
+          <div class="card metric-box">
+            <span class="metric-label">Typing Speed</span>
+            <div class="metric-value" id="res-wpm">0 WPM</div>
+          </div>
+
+          <!-- Accuracy -->
+          <div class="card metric-box">
+            <span class="metric-label">Accuracy Rate</span>
+            <div class="metric-value" id="res-accuracy" style="color: var(--success);">100%</div>
+          </div>
+
+          <!-- Errors -->
+          <div class="card metric-box">
+            <span class="metric-label">Errors Made</span>
+            <div class="metric-value" id="res-errors" style="color: var(--error);">0</div>
+          </div>
+
+          <!-- Time elapsed -->
+          <div class="card metric-box">
+            <span class="metric-label">Duration</span>
+            <div class="metric-value" id="res-time">60s</div>
+          </div>
+        </div>
+
+        <!-- Fact Summary Recap -->
+        <div class="card" style="border-left: 5px solid var(--primary); background-color: var(--bg-card);">
+          <div style="font-size: 12px; text-transform: uppercase; font-weight: 700; color: var(--primary); margin-bottom: 6px; letter-spacing: 0.5px;">Did You Learn?</div>
+          <h3 style="font-size: 18px; font-weight: 600; line-height: 1.5; color: var(--text-main);" id="res-fact-recap">Light takes 8 minutes to travel to Earth.</h3>
+        </div>
+
+        <!-- Graph rendering history WPM -->
+        <div class="card">
+          <div class="card-title">WPM Speed Over Time</div>
+          <div style="height: 300px; width: 100%;">
+            <canvas id="wpmHistoryChart"></canvas>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 16px;">
+          <button class="btn btn-primary" onclick="restartTestConfig()"><i data-lucide="refresh-cw"></i> Take Another Test</button>
+          <button class="btn btn-outline" onclick="exitResults()"><i data-lucide="layout-dashboard"></i> Back to Dashboard</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Lucide Script -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js Script -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/typing.js"></script>
+  <script src="js/tests.js"></script>
+</body>
+</html>

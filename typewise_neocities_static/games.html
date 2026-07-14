@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" class="theme-ocean">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TypeWise - Typing Games</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .games-menu-view {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .game-play-view {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+    }
+    .game-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 220px;
+    }
+    .game-card-icon {
+      width: 48px;
+      height: 48px;
+      background-color: var(--bg-app);
+      border-radius: 12px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+    .game-score-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- SIDEBAR NAV -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">TW</div>
+        <span class="logo-text">TypeWise</span>
+      </div>
+      <ul class="nav-links">
+        <li class="nav-item"><a href="dashboard.html"><i data-lucide="layout-dashboard"></i> <span>Dashboard</span></a></li>
+        <li class="nav-item"><a href="lessons.html"><i data-lucide="book-open"></i> <span>Lessons</span></a></li>
+        <li class="nav-item"><a href="tests.html"><i data-lucide="timer"></i> <span>Tests</span></a></li>
+        <li class="nav-item active"><a href="games.html"><i data-lucide="gamepad-2"></i> <span>Games</span></a></li>
+        <li class="nav-item"><a href="themes.html"><i data-lucide="palette"></i> <span>Themes</span></a></li>
+        <li class="nav-item"><a href="progress.html"><i data-lucide="trending-up"></i> <span>Progress</span></a></li>
+        <li class="nav-item"><a href="profile.html"><i data-lucide="user"></i> <span>Profile</span></a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="user-profile-summary" onclick="location.href='profile.html'">
+          <div class="user-avatar-placeholder" id="nav-avatar">U</div>
+          <div class="user-name-role">
+            <span class="username-label" id="nav-username">Loading...</span>
+            <span class="xp-label" id="nav-xp">0 XP</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN BODY -->
+    <main class="main-content">
+      
+      <!-- GAMES MENU -->
+      <div class="games-menu-view" id="menu-section">
+        <header class="top-header" style="grid-column: 1 / -1;">
+          <div class="header-title">
+            <h1>Arcade Games</h1>
+            <p>Practice specific muscle memories and speeds with interactive typing games.</p>
+          </div>
+        </header>
+
+        <!-- Word Rain -->
+        <div class="card game-card">
+          <div>
+            <div class="game-card-icon"><i data-lucide="cloud-rain"></i></div>
+            <h3 style="font-size: 20px; margin-bottom: 6px;">Word Rain</h3>
+            <p style="color: var(--text-muted); font-size: 14px; line-height: 1.4;">Type falling words before they hit the ground. Don't let your water level rise!</p>
+          </div>
+          <button class="btn btn-accent" style="margin-top: 16px; justify-content: center;" onclick="launchGame('word-rain')">Play Game</button>
+        </div>
+
+        <!-- Key Ninja -->
+        <div class="card game-card">
+          <div>
+            <div class="game-card-icon"><i data-lucide="sword"></i></div>
+            <h3 style="font-size: 20px; margin-bottom: 6px;">Key Ninja</h3>
+            <p style="color: var(--text-muted); font-size: 14px; line-height: 1.4;">Slice floating keys by pressing the matching key. Sharp reflex drill.</p>
+          </div>
+          <button class="btn btn-accent" style="margin-top: 16px; justify-content: center;" onclick="launchGame('key-ninja')">Play Game</button>
+        </div>
+
+        <!-- Race Track -->
+        <div class="card game-card">
+          <div>
+            <div class="game-card-icon"><i data-lucide="car"></i></div>
+            <h3 style="font-size: 20px; margin-bottom: 6px;">Race Track</h3>
+            <p style="color: var(--text-muted); font-size: 14px; line-height: 1.4;">Race a ghost car to the finish line. Your speed dictates your car's progress.</p>
+          </div>
+          <button class="btn btn-accent" style="margin-top: 16px; justify-content: center;" onclick="launchGame('race-track')">Play Game</button>
+        </div>
+
+        <!-- Fact Match -->
+        <div class="card game-card">
+          <div>
+            <div class="game-card-icon"><i data-lucide="brain-circuit"></i></div>
+            <h3 style="font-size: 20px; margin-bottom: 6px;">Fact Match</h3>
+            <p style="color: var(--text-muted); font-size: 14px; line-height: 1.4;">Fill in the missing trivia word. Speed typing tests your recall.</p>
+          </div>
+          <button class="btn btn-accent" style="margin-top: 16px; justify-content: center;" onclick="launchGame('fact-match')">Play Game</button>
+        </div>
+      </div>
+
+      <!-- ACTIVE GAME BOARD -->
+      <div class="game-play-view" id="play-section">
+        <header class="top-header" style="margin-bottom: 8px;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <button class="btn btn-outline" style="padding: 8px 16px;" onclick="exitGame()"><i data-lucide="chevron-left"></i> Main Menu</button>
+            <h2 id="game-title" style="font-size: 22px;">Game Title</h2>
+          </div>
+        </header>
+
+        <!-- Stats row -->
+        <div class="game-score-bar">
+          <div style="display: flex; gap: 24px;">
+            <div>Score: <strong id="game-score" style="color: var(--primary); font-size: 18px;">0</strong></div>
+            <div id="game-lives-wrapper">Lives: <span id="game-lives" style="color: var(--error); font-size: 18px;">♥♥♥</span></div>
+          </div>
+          <div id="game-subtext" style="font-size: 13px; color: var(--text-muted);">
+            Type the highlighted word. Focus on accuracy!
+          </div>
+        </div>
+
+        <!-- Word Rain Board -->
+        <div class="game-container" id="board-word-rain" style="display: none; padding: 0;">
+          <div class="word-rain-screen" id="rain-screen-container">
+            <!-- Falling words dynamically spawned here -->
+          </div>
+        </div>
+
+        <!-- Key Ninja Board -->
+        <div class="game-container" id="board-key-ninja" style="display: none; padding: 0;">
+          <div class="key-ninja-screen" id="ninja-screen-container">
+            <div class="key-ninja-bubble" id="ninja-bubble">A</div>
+            <div style="font-size: 18px; font-weight: 600;">Slice it! Press the matching key.</div>
+          </div>
+        </div>
+
+        <!-- Race Track Board -->
+        <div class="game-container" id="board-race-track" style="display: none; padding: 0;">
+          <div class="race-track-screen">
+            <!-- Lane 1 (Player) -->
+            <div class="race-lane">
+              <div class="race-car" id="car-player">
+                <span class="race-car-icon">🏎️</span>
+                <span class="race-car-label" style="background-color: var(--primary);">You</span>
+              </div>
+              <div class="finish-line"></div>
+            </div>
+            <!-- Lane 2 (Ghost) -->
+            <div class="race-lane">
+              <div class="race-car" id="car-ghost">
+                <span class="race-car-icon">🚗</span>
+                <span class="race-car-label">Ghost (40 WPM)</span>
+              </div>
+              <div class="finish-line"></div>
+            </div>
+          </div>
+          <!-- Typing interface under racetrack -->
+          <div class="typing-text-area" id="race-typing-box" tabindex="0" style="width: 90%; min-height: 80px; font-size: 18px;">
+            <!-- Race passage -->
+          </div>
+        </div>
+
+        <!-- Fact Match Board -->
+        <div class="game-container" id="board-fact-match" style="display: none; padding: 0;">
+          <div class="fact-match-screen">
+            <div class="fact-match-sentence" id="fact-match-prompt">
+              The capital of Australia is <span class="fact-match-blank" id="fact-match-blank-word">______</span>.
+            </div>
+            <input type="text" id="fact-match-input" class="form-control" style="width: 100%; max-width: 320px; font-size: 18px; text-align: center;" placeholder="Type the answer here..." autofocus autocomplete="off">
+            <div id="fact-match-hint" style="font-size: 13px; color: var(--text-muted);">
+              Hint: starts with 'c'.
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Lucide Script -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="js/api.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/typing.js"></script>
+  <script src="js/games.js"></script>
+</body>
+</html>
